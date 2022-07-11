@@ -19,9 +19,14 @@ val appStore = Store(
 data class State(
     val itemField: ItemField = ItemField(),
     val shoppingList: List<Item> = emptyList(),
+    val navigationStack: NavigationStack = listOf(Screen.Main),
 )
 
 fun rootReducer(state: State, action: Action): State = when (action) {
+    is NavAction -> state.copy(navigationStack = navigationReducer(
+        state.navigationStack,
+        action
+    ))
     is ItemFieldAction.Submit -> state.copy(
         itemField = itemFieldReducer(state.itemField, action),
         shoppingList = shoppingListReducer(state.shoppingList, doAddItem(state.itemField.toItem()))

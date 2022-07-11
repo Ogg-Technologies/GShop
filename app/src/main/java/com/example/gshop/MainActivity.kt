@@ -5,19 +5,15 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.gshop.model.State
-import com.example.gshop.model.appStore
-import com.example.gshop.model.mockState
+import com.example.gshop.model.*
 import com.example.gshop.redux.Dispatch
 import com.example.gshop.ui.MainScreen
+import com.example.gshop.ui.RecipeScreen
+import com.example.gshop.ui.RecipesListScreen
 import com.example.gshop.ui.theme.GShopTheme
 
 class MainActivity : ComponentActivity() {
@@ -35,12 +31,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun GShopApp(state: State, dispatch: Dispatch) {
     GShopTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
-        ) {
-            // Display the correct screen based on the state
-            MainScreen(state, dispatch)
+        when (state.currentScreen) {
+            is Screen.Main -> MainScreen(state, dispatch)
+            is Screen.RecipesList -> RecipesListScreen(state, dispatch)
+            is Screen.Recipe -> RecipeScreen(state, dispatch)
         }
     }
 }

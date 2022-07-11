@@ -91,6 +91,11 @@ fun MainTopBar(dispatch: Dispatch) {
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(text = "Remove completed")
                 }
+                DropdownMenuItem(onClick = {
+                    dispatch(doNavigateTo(Screen.RecipesList))
+                }) {
+                    Text(text = "Recipes")
+                }
             }
         }
     )
