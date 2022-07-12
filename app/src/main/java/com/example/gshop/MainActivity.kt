@@ -15,15 +15,26 @@ import com.example.gshop.ui.MainScreen
 import com.example.gshop.ui.RecipeScreen
 import com.example.gshop.ui.RecipesListScreen
 import com.example.gshop.ui.theme.GShopTheme
+import kotlinx.serialization.json.Json
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        tryLoadSavedState()
 
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         setContent {
             val state: State by appStore.stateFlow.collectAsState()
             GShopApp(state, appStore.dispatch)
+        }
+    }
+
+    private fun tryLoadSavedState() {
+        val savedJsonState = Database.readJsonState() ?: return
+        try {
+            val state = Json.decodeFromString(State.serializer(), savedJsonState)
+            appStore.dispatch(SetState(state))
+        } catch (e: Exception) {
         }
     }
 }

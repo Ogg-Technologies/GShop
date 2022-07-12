@@ -1,6 +1,8 @@
 package com.example.gshop.ui
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,7 +18,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import com.example.gshop.model.*
 import com.example.gshop.model.State
 import com.example.gshop.redux.Dispatch
@@ -75,6 +76,11 @@ fun MainTopBar(dispatch: Dispatch) {
         title = { Text("GShop") },
         backgroundColor = MaterialTheme.colors.primary,
         actions = {
+            IconButton(onClick = {
+                dispatch(doStaggeredClearCompleted())
+            }) {
+                Icon(Icons.Filled.Delete, contentDescription = "Delete")
+            }
             var showMenu by remember { mutableStateOf(false) }
             IconButton(onClick = { showMenu = !showMenu }) {
                 Icon(Icons.Default.MoreVert, contentDescription = "More")
@@ -84,15 +90,8 @@ fun MainTopBar(dispatch: Dispatch) {
                 onDismissRequest = { showMenu = false }
             ) {
                 DropdownMenuItem(onClick = {
-                    dispatch(doStaggeredClearCompleted())
-                    showMenu = false
-                }) {
-                    Icon(Icons.Filled.Delete, contentDescription = "Delete")
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(text = "Remove completed")
-                }
-                DropdownMenuItem(onClick = {
                     dispatch(doNavigateTo(Screen.RecipesList))
+                    showMenu = false
                 }) {
                     Text(text = "Recipes")
                 }

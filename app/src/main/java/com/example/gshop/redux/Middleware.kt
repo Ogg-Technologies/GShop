@@ -1,5 +1,6 @@
 package com.example.gshop.redux
 
+import com.example.gshop.model.Database
 import com.example.gshop.model.State
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -19,6 +20,12 @@ val Action.name: String
 val loggerMiddleware: Middleware<State> = { store, next, action ->
     next(action)
     println("New action: ${action.name} -> ${Json.encodeToString(store.state)}")
+}
+
+val persistentStorageMiddleware: Middleware<State> = { store, next, action ->
+    next(action)
+    val jsonState = Json.encodeToString(store.state)
+    Database.writeJsonState(jsonState)
 }
 
 /**

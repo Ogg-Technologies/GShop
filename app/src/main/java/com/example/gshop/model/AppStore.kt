@@ -1,9 +1,6 @@
 package com.example.gshop.model
 
-import com.example.gshop.redux.Action
-import com.example.gshop.redux.Store
-import com.example.gshop.redux.loggerMiddleware
-import com.example.gshop.redux.thunkMiddleware
+import com.example.gshop.redux.*
 import kotlinx.serialization.Serializable
 
 val appStore = Store(
@@ -12,6 +9,7 @@ val appStore = Store(
     middlewares = listOf(
         loggerMiddleware,
         thunkMiddleware,
+        persistentStorageMiddleware,
     )
 )
 
@@ -22,7 +20,10 @@ data class State(
     val navigationStack: NavigationStack = listOf(Screen.Main),
 )
 
+data class SetState(val state: State) : Action
+
 fun rootReducer(state: State, action: Action): State = when (action) {
+    is SetState -> action.state
     is NavAction -> state.copy(navigationStack = navigationReducer(
         state.navigationStack,
         action
