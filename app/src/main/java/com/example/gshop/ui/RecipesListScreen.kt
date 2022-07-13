@@ -1,17 +1,18 @@
 package com.example.gshop.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.gshop.model.store.Screen
-import com.example.gshop.model.store.State
-import com.example.gshop.model.store.doNavigateTo
-import com.example.gshop.model.store.mockState
+import com.example.gshop.model.store.*
 import com.example.gshop.redux.Dispatch
 import com.example.gshop.ui.theme.GShopTheme
 
 @Composable
 fun RecipesListScreen(state: State, dispatch: Dispatch) {
+    BackHandler {
+        dispatch(doScreenChangeDispatch(doNavigateBack()))
+    }
     Scaffold(
         topBar = { RecipesListTopBar(dispatch) },
         content = {

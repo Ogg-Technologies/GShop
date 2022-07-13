@@ -19,7 +19,6 @@ import androidx.compose.ui.window.PopupProperties
 import com.example.gshop.model.store.doNavigateBack
 import com.example.gshop.redux.Dispatch
 
-
 @Composable
 fun SimpleStringOverflowMenu(
     content: SimpleStringOverflowMenuScope.() -> Unit,
@@ -103,7 +102,7 @@ fun OnKeyboardClose(view: View, lambda: () -> Unit) =
 
 @Composable
 fun KeyboardVisibilityChangeListener(view: View, onChange: (isOpened: Boolean) -> Unit) {
-    var wasKeyboardOpened = remember { false }
+    var wasKeyboardOpened = remember { view.hasKeyboard() }
 
     DisposableEffect(view) {
         val onGlobalListener = ViewTreeObserver.OnGlobalLayoutListener {
