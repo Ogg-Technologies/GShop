@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewTreeObserver
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -18,6 +20,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.example.gshop.model.store.doNavigateBack
 import com.example.gshop.redux.Dispatch
+
+
+fun <I> LazyListScope.itemsWithDividers(
+    items: List<I>,
+    divider: @Composable () -> Unit,
+    itemContent: @Composable LazyItemScope.(item: I) -> Unit,
+) {
+    items.forEachIndexed { index, item ->
+        item {
+            if (index != 0) divider()
+            itemContent(item)
+        }
+    }
+}
 
 @Composable
 fun SimpleStringOverflowMenu(

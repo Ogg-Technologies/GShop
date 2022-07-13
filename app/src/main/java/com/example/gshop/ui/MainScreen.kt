@@ -47,13 +47,24 @@ fun MainScreen(state: State, dispatch: Dispatch) {
 @Composable
 fun ShoppingListView(shoppingList: List<Item>, dispatch: Dispatch) {
     LazyColumn {
-        shoppingList.forEach { listItem ->
-            item {
-                ItemView(listItem, dispatch)
-            }
+        itemsWithDividers(shoppingList,
+            divider = {
+                Divider(color = Color.Gray.copy(alpha = 0.2f),
+                    thickness = 1.dp)
+            }) { item ->
+            ItemView(item, dispatch)
         }
     }
+}
 
+@Preview(showBackground = true)
+@Composable
+fun ShoppingListViewPreview() {
+    GShopTheme {
+        Surface {
+            ShoppingListView(shoppingList = mockState().shoppingList, dispatch = {})
+        }
+    }
 }
 
 @Composable
