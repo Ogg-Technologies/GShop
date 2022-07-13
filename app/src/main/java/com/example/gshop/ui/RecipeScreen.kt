@@ -1,6 +1,5 @@
 package com.example.gshop.ui
 
-import android.content.res.Configuration
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -31,7 +30,7 @@ fun RecipeTopBar(dispatch: Dispatch) {
     )
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun RecipePreview() {
     GShopTheme {

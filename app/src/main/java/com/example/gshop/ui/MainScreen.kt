@@ -1,9 +1,6 @@
 package com.example.gshop.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,11 +14,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.gshop.model.store.*
 import com.example.gshop.model.store.State
 import com.example.gshop.redux.Dispatch
+import com.example.gshop.ui.theme.GShopTheme
 
 @Composable
 fun MainScreen(state: State, dispatch: Dispatch) {
@@ -59,15 +61,31 @@ fun ShoppingListView(shoppingList: List<Item>, dispatch: Dispatch) {
 fun ItemView(item: Item, dispatch: Dispatch) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .padding(top = 8.dp, bottom = 8.dp, start = 4.dp, end = 4.dp)
+            .fillMaxWidth()
     ) {
         Checkbox(
             checked = item.isChecked,
             onCheckedChange = {
                 dispatch(ListAction.ToggleItem(item.id))
-            }
+            },
         )
-        Text(text = item.name)
+        Spacer(modifier = Modifier.width(8.dp))
+        Column {
+            Text(text = item.name, fontSize = 24.sp)
+            Text(text = item.category, fontSize = 12.sp, color = Color.LightGray)
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ItemViewPreview() {
+    GShopTheme {
+        Surface {
+            ItemView(item = mockItem("Chicken"), dispatch = { })
+        }
     }
 }
 

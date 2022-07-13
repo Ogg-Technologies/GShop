@@ -1,6 +1,5 @@
 package com.example.gshop
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
@@ -54,7 +53,7 @@ private fun GShopApp(state: State, dispatch: Dispatch) {
 }
 
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     GShopApp(state = mockState(), dispatch = {})

@@ -1,6 +1,5 @@
 package com.example.gshop.ui
 
-import android.content.res.Configuration
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,7 +32,7 @@ fun RecipesListTopBar(dispatch: Dispatch) {
     )
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun RecipesListPreview() {
     GShopTheme {
