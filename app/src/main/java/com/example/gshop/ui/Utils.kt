@@ -10,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,6 +18,48 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.example.gshop.model.store.doNavigateBack
 import com.example.gshop.redux.Dispatch
+
+
+@Composable
+fun SimpleStringOverflowMenu(
+    content: SimpleStringOverflowMenuScope.() -> Unit,
+) {
+    SimpleStringOverflowMenu(SimpleStringOverflowMenuScope().apply(content).items)
+}
+
+class SimpleStringOverflowMenuScope {
+    val items = mutableListOf<SimpleStringOverflowMenuItem>()
+    infix fun String.does(action: () -> Unit) {
+        items.add(SimpleStringOverflowMenuItem(this, action))
+    }
+}
+
+data class SimpleStringOverflowMenuItem(val title: String, val action: () -> Unit)
+
+@Composable
+fun SimpleStringOverflowMenu(
+    items: List<SimpleStringOverflowMenuItem>,
+) {
+    Box {
+        var isExpanded by remember { mutableStateOf(false) }
+        IconButton(onClick = { isExpanded = !isExpanded }) {
+            Icon(Icons.Default.MoreVert, contentDescription = "More")
+        }
+        DropdownMenu(
+            expanded = isExpanded,
+            onDismissRequest = { isExpanded = false }
+        ) {
+            for (item in items) {
+                DropdownMenuItem(onClick = {
+                    item.action()
+                    isExpanded = false
+                }) {
+                    Text(text = item.title)
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun SimpleTextSpinner(

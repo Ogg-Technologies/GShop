@@ -2,6 +2,7 @@ package com.example.gshop.model.store
 
 import com.example.gshop.redux.Action
 import com.example.gshop.redux.AsyncThunk
+import com.example.gshop.redux.Thunk
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
 import java.util.*
@@ -30,6 +31,14 @@ sealed interface ListAction : Action {
 
 fun doAddItem(item: Item): Action = ListAction.AddItems(listOf(item))
 fun doRemoveItem(id: Identifier): Action = ListAction.RemoveItems(listOf(id))
+fun doEditItem(id: Identifier): Action = Thunk { state, dispatch ->
+    val item = state.shoppingList.first { it.id == id }
+    dispatch(doRemoveItem(id))
+    dispatch(ItemFieldAction.SetText(item.name))
+    dispatch(ItemFieldAction.SetCategory(item.category))
+    dispatch(ItemFieldAction.Open)
+}
+
 fun doStaggeredClearCompleted(timeDelay: Long = 100): Action = AsyncThunk { state, dispatch ->
     val completedIds = state.shoppingList.filter { it.isChecked }.map { it.id }
     completedIds.forEach {

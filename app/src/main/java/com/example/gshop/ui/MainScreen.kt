@@ -8,8 +8,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -21,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gshop.model.store.*
-import com.example.gshop.model.store.State
 import com.example.gshop.redux.Dispatch
 import com.example.gshop.ui.theme.GShopTheme
 
@@ -76,6 +75,11 @@ fun ItemView(item: Item, dispatch: Dispatch) {
             Text(text = item.name, fontSize = 24.sp)
             Text(text = item.category, fontSize = 12.sp, color = Color.LightGray)
         }
+        Spacer(modifier = Modifier.weight(1f))
+        SimpleStringOverflowMenu {
+            "Delete" does { dispatch(doRemoveItem(item.id)) }
+            "Edit" does { dispatch(doEditItem(item.id)) }
+        }
     }
 }
 
@@ -100,20 +104,8 @@ fun MainTopBar(dispatch: Dispatch) {
             }) {
                 Icon(Icons.Filled.Delete, contentDescription = "Delete")
             }
-            var showMenu by remember { mutableStateOf(false) }
-            IconButton(onClick = { showMenu = !showMenu }) {
-                Icon(Icons.Default.MoreVert, contentDescription = "More")
-            }
-            DropdownMenu(
-                expanded = showMenu,
-                onDismissRequest = { showMenu = false }
-            ) {
-                DropdownMenuItem(onClick = {
-                    dispatch(doNavigateTo(Screen.RecipesList))
-                    showMenu = false
-                }) {
-                    Text(text = "Recipes")
-                }
+            SimpleStringOverflowMenu {
+                "Recipes" does { dispatch(doNavigateTo(Screen.RecipesList)) }
             }
         }
     )
