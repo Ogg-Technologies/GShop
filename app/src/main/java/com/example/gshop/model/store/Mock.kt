@@ -1,4 +1,4 @@
-package com.example.gshop.model
+package com.example.gshop.model.store
 
 fun mockState() = State(
     itemField = ItemField(text = "Ham", isOpened = true),

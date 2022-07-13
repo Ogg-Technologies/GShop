@@ -1,4 +1,4 @@
-package com.example.gshop.model
+package com.example.gshop.model.store
 
 import com.example.gshop.redux.Action
 import com.example.gshop.redux.AsyncThunk

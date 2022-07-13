@@ -4,10 +4,10 @@ import android.content.res.Configuration
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.gshop.model.Screen
-import com.example.gshop.model.State
-import com.example.gshop.model.doNavigateTo
-import com.example.gshop.model.mockState
+import com.example.gshop.model.store.Screen
+import com.example.gshop.model.store.State
+import com.example.gshop.model.store.doNavigateTo
+import com.example.gshop.model.store.mockState
 import com.example.gshop.redux.Dispatch
 import com.example.gshop.ui.theme.GShopTheme
 

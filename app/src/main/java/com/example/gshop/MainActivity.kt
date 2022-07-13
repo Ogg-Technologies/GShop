@@ -9,7 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.gshop.model.*
+import com.example.gshop.model.Database
+import com.example.gshop.model.store.*
 import com.example.gshop.redux.Dispatch
 import com.example.gshop.ui.MainScreen
 import com.example.gshop.ui.RecipeScreen
@@ -22,7 +23,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         tryLoadSavedState()
 
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        // Fixes issue where keyboard is displayed above content
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
         setContent {
             val state: State by appStore.stateFlow.collectAsState()
             GShopApp(state, appStore.dispatch)

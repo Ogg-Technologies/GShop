@@ -7,8 +7,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.gshop.model.State
-import com.example.gshop.model.mockState
+import com.example.gshop.model.store.State
+import com.example.gshop.model.store.mockState
 import com.example.gshop.redux.Dispatch
 import com.example.gshop.ui.theme.GShopTheme
 

@@ -1,4 +1,4 @@
-package com.example.gshop.model
+package com.example.gshop.model.store
 
 import com.example.gshop.redux.*
 import kotlinx.serialization.Serializable
@@ -18,6 +18,7 @@ data class State(
     val itemField: ItemField = ItemField(),
     val shoppingList: List<Item> = emptyList(),
     val navigationStack: NavigationStack = listOf(Screen.Main),
+    val categoryAssociations: List<CategoryAssociation> = createEmptyCategoryAssociations(),
 )
 
 data class SetState(val state: State) : Action

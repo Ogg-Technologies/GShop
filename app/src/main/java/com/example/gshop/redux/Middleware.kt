@@ -1,7 +1,7 @@
 package com.example.gshop.redux
 
 import com.example.gshop.model.Database
-import com.example.gshop.model.State
+import com.example.gshop.model.store.State
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

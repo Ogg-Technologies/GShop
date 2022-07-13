@@ -1,5 +1,6 @@
 package com.example.gshop.ui
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,8 +19,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
-import com.example.gshop.model.*
-import com.example.gshop.model.State
+import com.example.gshop.model.store.*
+import com.example.gshop.model.store.State
 import com.example.gshop.redux.Dispatch
 
 @Composable
@@ -36,7 +37,7 @@ fun MainScreen(state: State, dispatch: Dispatch) {
         },
         bottomBar = {
             if (state.itemField.isOpened) {
-                ItemFieldView(state.itemField, dispatch)
+                ItemFieldView(state, dispatch)
             }
         },
     )
@@ -101,7 +102,7 @@ fun MainTopBar(dispatch: Dispatch) {
 }
 
 @Composable
-fun ItemFieldView(itemField: ItemField, dispatch: Dispatch) {
+fun ItemFieldView(state: State, dispatch: Dispatch) {
     val focusRequester = FocusRequester()
     val view = LocalView.current
     LaunchedEffect(view) { focusRequester.requestFocus() }
@@ -111,21 +112,28 @@ fun ItemFieldView(itemField: ItemField, dispatch: Dispatch) {
         color = MaterialTheme.colors.background,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        TextField(
-            value = itemField.text,
-            onValueChange = {
-                dispatch(ItemFieldAction.SetText(it))
-            },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = { dispatch(ItemFieldAction.Submit) }
-            ),
-            placeholder = { Text("Add a todo...") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(focusRequester),
-        )
+        Column {
+            TextField(
+                value = state.itemField.text,
+                onValueChange = {
+                    dispatch(ItemFieldAction.SetText(it))
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { dispatch(ItemFieldAction.Submit) }
+                ),
+                placeholder = { Text("Add a todo...") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester)
+            )
+            SimpleTextSpinner(
+                items = state.allCategories(),
+                selectedItem = state.itemField.category,
+                onSelectItem = { dispatch(ItemFieldAction.SetCategory(it)) },
+            )
+        }
     }
 }
