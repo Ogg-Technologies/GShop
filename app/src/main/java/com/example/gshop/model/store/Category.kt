@@ -1,13 +1,33 @@
 package com.example.gshop.model.store
 
-import kotlinx.serialization.Serializable
+import com.example.gshop.model.utilities.calculateDiceCoefficient
+import com.example.gshop.model.utilities.classifyWithKNN
 
-@Serializable
-data class CategoryAssociation(val name: Category, val knownProducts: Set<String>)
+fun guessCategory(itemName: String, itemCategoryAssociations: Map<String, Category>): Category {
+    // If the item has an exact match in our associations, use that
+    itemCategoryAssociations[itemName]?.let {
+        return it
+    }
+
+    // If no exact match exist, predict it using KNN with Dices coefficient
+    return guessCategoryWithKNN(itemName, itemCategoryAssociations)
+}
+
+private fun guessCategoryWithKNN(
+    itemName: String,
+    itemCategoryAssociations: Map<String, Category>,
+): Category = classifyWithKNN(
+    trainingData = itemCategoryAssociations,
+    predictionItem = itemName,
+    k = 3,
+    distanceFunction = { a, b -> 1 - calculateDiceCoefficient(a, b) }
+)
+
+private data class CategoryAssociation(val name: Category, val knownProducts: Set<String>)
 
 const val DEFAULT_CATEGORY = "Other"
 
-val startingCategoryAssociations: List<CategoryAssociation> = listOf(
+private val startingCategoryAssociationData: List<CategoryAssociation> = listOf(
     CategoryAssociation(
         "Vegetables/Fruit", setOf(
             "vegetable",
@@ -162,5 +182,9 @@ val startingCategoryAssociations: List<CategoryAssociation> = listOf(
     )
 )
 
-val allCategories: List<Category> = startingCategoryAssociations.map { it.name }
+val allCategories: List<Category> = startingCategoryAssociationData.map { it.name }
 
+fun getStartingItemCategoryAssociations(): Map<String, Category> =
+    startingCategoryAssociationData
+        .flatMap { data -> data.knownProducts.map { it to data.name } }
+        .toMap()
