@@ -151,7 +151,7 @@ fun ItemFieldView(state: State, dispatch: Dispatch) {
                     .focusRequester(focusRequester)
             )
             SimpleTextSpinner(
-                items = state.allCategories(),
+                items = allCategories,
                 selectedItem = state.itemField.category,
                 onSelectItem = { dispatch(ItemFieldAction.SetCategory(it)) },
             )

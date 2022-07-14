@@ -22,6 +22,10 @@ data class Item(
 
 fun Item.toggle() = copy(isChecked = !isChecked)
 fun List<Item>.toggle(id: Identifier): List<Item> = map { if (it.id == id) it.toggle() else it }
+fun List<Item>.sortedByCategoryAndName() = sortedWith(compareBy(
+    { allCategories.indexOf(it.category) },
+    { it.name }
+))
 
 sealed interface ListAction : Action {
     data class AddItems(val items: List<Item>) : ListAction
@@ -48,7 +52,7 @@ fun doStaggeredClearCompleted(timeDelay: Long = 100): Action = AsyncThunk { stat
 }
 
 fun shoppingListReducer(shoppingList: List<Item>, action: Action): List<Item> = when (action) {
-    is ListAction.AddItems -> shoppingList + action.items
+    is ListAction.AddItems -> (shoppingList + action.items).sortedByCategoryAndName()
     is ListAction.ToggleItem -> shoppingList.toggle(action.id)
     is ListAction.RemoveItems -> shoppingList.filter { it.id !in action.ids }
     else -> shoppingList

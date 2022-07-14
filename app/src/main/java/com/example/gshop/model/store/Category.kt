@@ -5,11 +5,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CategoryAssociation(val name: Category, val knownProducts: Set<String>)
 
-fun State.allCategories(): List<Category> = categoryAssociations.map { it.name }
-
 const val DEFAULT_CATEGORY = "Other"
 
-fun createEmptyCategoryAssociations() = listOf(
+val allCategories = listOf(
     "Vegetables/Fruit",
     "Bread",
     "Cookies",
@@ -29,4 +27,6 @@ fun createEmptyCategoryAssociations() = listOf(
     "Candy/Chips",
     DEFAULT_CATEGORY,
     "Large Items",
-).map { CategoryAssociation(it, emptySet()) }
+)
+
+fun createEmptyCategoryAssociations() = allCategories.map { CategoryAssociation(it, emptySet()) }
