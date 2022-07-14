@@ -42,15 +42,21 @@ private fun State.recipesFolder(): String? = when (recipesData) {
     else -> null
 }
 
-fun State.selectedRecipe(): Recipe {
+fun State.selectedRecipeIndex(): Int = when (currentScreen) {
+    is Screen.Recipe -> (currentScreen as Screen.Recipe).recipeIndex
+    is Screen.IngredientsSelection -> (currentScreen as Screen.IngredientsSelection).recipeIndex
+    else -> throw IllegalStateException("No recipe selected")
+}
+
+fun State.getRecipe(recipeIndex: Int): Recipe {
     val recipes = (recipesData as? RecipesData.Initialized)?.recipes
     checkNotNull(recipes) { "Recipes have not been initialized" }
-    val selectedRecipeIndex = (currentScreen as? Screen.Recipe)?.index
-    checkNotNull(selectedRecipeIndex) { "Recipe screen is not opened" }
-    val recipe = recipes.getOrNull(selectedRecipeIndex)
-    checkNotNull(recipe) { "Recipe with index $selectedRecipeIndex does not exist. recipes.size=${recipes.size}" }
+    val recipe = recipes.getOrNull(recipeIndex)
+    checkNotNull(recipe) { "Recipe with index $recipeIndex does not exist. recipes.size=${recipes.size}" }
     return recipe
 }
+
+fun State.selectedRecipe(): Recipe = getRecipe(selectedRecipeIndex())
 
 fun doRefreshRecipes() = Thunk { state, dispatch ->
     state.recipesFolder()?.let {

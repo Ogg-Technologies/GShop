@@ -22,7 +22,7 @@ import com.example.gshop.ui.theme.GShopTheme
 @Composable
 fun RecipesListScreen(state: State, dispatch: Dispatch) {
     BackHandler {
-        dispatch(doScreenChangeDispatch(doNavigateBack()))
+        dispatch(doNavigateBack())
     }
     Scaffold(
         topBar = { RecipesListTopBar(dispatch) },
@@ -44,7 +44,7 @@ fun RecipesListView(recipesData: RecipesData.Initialized, dispatch: Dispatch) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        dispatch(doScreenChangeDispatch(NavAction.Goto(Screen.Recipe(index))))
+                        dispatch(doNavigateTo(Screen.Recipe(index)))
                     }
                     .padding(16.dp),
             )

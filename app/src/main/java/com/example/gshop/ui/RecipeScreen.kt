@@ -2,29 +2,35 @@ package com.example.gshop.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gshop.model.store.*
 import com.example.gshop.redux.Dispatch
-import com.example.gshop.ui.theme.GShopTheme
 
 @Composable
-fun RecipeScreen(state: State, dispatch: Dispatch) {
+fun RecipeScreen(screen: Screen.Recipe, state: State, dispatch: Dispatch) {
     BackHandler {
-        dispatch(doScreenChangeDispatch(doNavigateBack()))
+        dispatch(doNavigateBack())
     }
-    val recipe = state.selectedRecipe()
+    val recipe = state.getRecipe(screen.recipeIndex)
     Scaffold(
         topBar = { RecipeTopBar(recipe, dispatch) },
         content = {
             Text(recipe.contents, modifier = Modifier.padding(16.dp))
         },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                val selectedIngredients = recipe.ingredients.map { it to true }
+                val newScreen = Screen.IngredientsSelection(screen.recipeIndex, selectedIngredients)
+                dispatch(doNavigateTo(newScreen))
+            }) {
+                Icon(Icons.Filled.Add, contentDescription = "Add")
+            }
+        }
     )
 }
 
@@ -35,12 +41,4 @@ fun RecipeTopBar(recipe: Recipe, dispatch: Dispatch) {
         backgroundColor = MaterialTheme.colors.primary,
         navigationIcon = { BackButton(dispatch) }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RecipePreview() {
-    GShopTheme {
-        RecipeScreen(state = mockState(), dispatch = {})
-    }
 }

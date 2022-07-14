@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.gshop.model.Database
 import com.example.gshop.model.store.*
 import com.example.gshop.redux.Dispatch
+import com.example.gshop.ui.IngredientsSelectionScreen
 import com.example.gshop.ui.MainScreen
 import com.example.gshop.ui.RecipeScreen
 import com.example.gshop.ui.RecipesListScreen
@@ -47,7 +48,16 @@ private fun GShopApp(state: State, dispatch: Dispatch) {
         when (state.currentScreen) {
             is Screen.Main -> MainScreen(state, dispatch)
             is Screen.RecipesList -> RecipesListScreen(state, dispatch)
-            is Screen.Recipe -> RecipeScreen(state, dispatch)
+            is Screen.Recipe -> RecipeScreen(
+                state.currentScreen as Screen.Recipe,
+                state,
+                dispatch,
+            )
+            is Screen.IngredientsSelection -> IngredientsSelectionScreen(
+                state.currentScreen as Screen.IngredientsSelection,
+                state,
+                dispatch,
+            )
         }
     }
 }

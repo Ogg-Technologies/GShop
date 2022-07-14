@@ -31,6 +31,10 @@ fun rootReducer(state: State, action: Action): State = when (action) {
         state.navigationStack,
         action
     ))
+    is ScreenAction -> state.copy(navigationStack = state.navigationStack.editLast {
+        screenReducer(it,
+            action)
+    })
     is ItemFieldAction -> state.copy(itemField = itemFieldReducer(state, action))
     is ListAction -> state.copy(shoppingList = shoppingListReducer(state.shoppingList, action))
     is AddItemCategoryAssociation -> state.copy(itemCategoryAssociations = itemCategoryAssociationsReducer(
