@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -158,11 +159,27 @@ fun ItemFieldView(state: State, dispatch: Dispatch) {
                     .fillMaxWidth()
                     .focusRequester(focusRequester)
             )
-            SimpleTextSpinner(
-                items = allCategories,
-                selectedItem = state.itemField.category,
-                onSelectItem = { dispatch(ItemFieldAction.SetCategory(it)) },
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                SimpleTextSpinner(
+                    items = allCategories,
+                    selectedItem = state.itemField.category,
+                    onSelectItem = { dispatch(ItemFieldAction.SetCategory(it)) },
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(onClick = { dispatch(doSubmitItemField(closeOnSubmit = true)) }) {
+                    Icon(
+                        Icons.Filled.Send,
+                        contentDescription = "Send",
+                        tint = MaterialTheme.colors.secondary,
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .size(30.dp)
+                    )
+                }
+
+            }
         }
     }
 }
