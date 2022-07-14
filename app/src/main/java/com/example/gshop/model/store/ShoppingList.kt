@@ -28,20 +28,19 @@ fun List<Item>.sortedByCategoryAndName() = sortedWith(compareBy(
 ))
 
 sealed interface ListAction : Action {
-    data class AddItems(val items: List<Item>) : ListAction
+    data class AddItem(val item: Item) : ListAction
     data class ToggleItem(val id: Identifier) : ListAction
-    data class RemoveItems(val ids: List<Identifier>) : ListAction
+    data class RemoveItem(val id: Identifier) : ListAction
 }
 
 fun doAddItem(item: Item) = Thunk { _, dispatch ->
-    dispatch(ListAction.AddItems(listOf(item)))
+    dispatch(ListAction.AddItem(item))
     dispatch(AddItemCategoryAssociation(item.name, item.category))
 }
 
-fun doRemoveItem(id: Identifier): Action = ListAction.RemoveItems(listOf(id))
 fun doEditItem(id: Identifier): Action = Thunk { state, dispatch ->
     val item = state.shoppingList.first { it.id == id }
-    dispatch(doRemoveItem(id))
+    dispatch(ListAction.RemoveItem(id))
     dispatch(ItemFieldAction.SetText(item.name))
     dispatch(ItemFieldAction.SetCategory(item.category))
     dispatch(ItemFieldAction.Open)
@@ -51,13 +50,13 @@ fun doStaggeredClearCompleted(timeDelay: Long = 100): Action = AsyncThunk { stat
     val completedIds = state.shoppingList.filter { it.isChecked }.map { it.id }
     completedIds.forEach {
         delay(timeDelay)
-        dispatch(doRemoveItem(it))
+        dispatch(ListAction.RemoveItem(it))
     }
 }
 
 fun shoppingListReducer(shoppingList: List<Item>, action: Action): List<Item> = when (action) {
-    is ListAction.AddItems -> (shoppingList + action.items).sortedByCategoryAndName()
+    is ListAction.AddItem -> (shoppingList + action.item).sortedByCategoryAndName()
     is ListAction.ToggleItem -> shoppingList.toggle(action.id)
-    is ListAction.RemoveItems -> shoppingList.filter { it.id !in action.ids }
+    is ListAction.RemoveItem -> shoppingList.filter { it.id != action.id }
     else -> shoppingList
 }

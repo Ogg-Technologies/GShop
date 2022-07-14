@@ -88,7 +88,7 @@ fun ItemView(item: Item, dispatch: Dispatch) {
         }
         Spacer(modifier = Modifier.weight(1f))
         SimpleStringOverflowMenu {
-            "Delete" does { dispatch(doRemoveItem(item.id)) }
+            "Delete" does { dispatch(ListAction.RemoveItem(item.id)) }
             "Edit" does { dispatch(doEditItem(item.id)) }
         }
     }
