@@ -18,7 +18,7 @@ data class State(
     val itemField: ItemField = ItemField(),
     val shoppingList: List<Item> = emptyList(),
     val navigationStack: NavigationStack = listOf(Screen.Main),
-    val categoryAssociations: List<CategoryAssociation> = createEmptyCategoryAssociations(),
+    val categoryAssociations: List<CategoryAssociation> = startingCategoryAssociations,
 )
 
 data class SetState(val state: State) : Action
