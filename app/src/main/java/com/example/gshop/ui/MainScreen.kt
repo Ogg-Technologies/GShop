@@ -143,7 +143,7 @@ fun ItemFieldView(state: State, dispatch: Dispatch) {
                     imeAction = ImeAction.Done
                 ),
                 keyboardActions = KeyboardActions(
-                    onDone = { dispatch(ItemFieldAction.Submit) }
+                    onDone = { dispatch(doSubmitItemField()) }
                 ),
                 placeholder = { Text("Add a todo...") },
                 modifier = Modifier

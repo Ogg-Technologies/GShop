@@ -2,6 +2,14 @@ package com.example.gshop.model.store
 
 import com.example.gshop.model.utilities.calculateDiceCoefficient
 import com.example.gshop.model.utilities.classifyWithKNN
+import com.example.gshop.redux.Action
+
+data class AddItemCategoryAssociation(val itemName: String, val category: Category) : Action
+
+fun itemCategoryAssociationsReducer(
+    itemCategoryAssociations: Map<String, Category>,
+    action: AddItemCategoryAssociation,
+): Map<String, Category> = itemCategoryAssociations + (action.itemName to action.category)
 
 fun guessCategory(itemName: String, itemCategoryAssociations: Map<String, Category>): Category {
     // If the item has an exact match in our associations, use that

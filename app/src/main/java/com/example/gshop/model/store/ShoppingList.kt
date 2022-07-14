@@ -33,7 +33,11 @@ sealed interface ListAction : Action {
     data class RemoveItems(val ids: List<Identifier>) : ListAction
 }
 
-fun doAddItem(item: Item): Action = ListAction.AddItems(listOf(item))
+fun doAddItem(item: Item) = Thunk { _, dispatch ->
+    dispatch(ListAction.AddItems(listOf(item)))
+    dispatch(AddItemCategoryAssociation(item.name, item.category))
+}
+
 fun doRemoveItem(id: Identifier): Action = ListAction.RemoveItems(listOf(id))
 fun doEditItem(id: Identifier): Action = Thunk { state, dispatch ->
     val item = state.shoppingList.first { it.id == id }

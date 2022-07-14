@@ -18,8 +18,8 @@ val Action.name: String
     }
 
 val loggerMiddleware: Middleware<State> = { store, next, action ->
-    next(action)
     println("New action: ${action.name} -> ${Json.encodeToString(store.state)}")
+    next(action)
 }
 
 val persistentStorageMiddleware: Middleware<State> = { store, next, action ->
