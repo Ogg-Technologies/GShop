@@ -49,11 +49,7 @@ fun MainScreen(state: State, dispatch: Dispatch) {
 @Composable
 fun ShoppingListView(shoppingList: List<Item>, dispatch: Dispatch) {
     LazyColumn {
-        itemsWithDividers(shoppingList,
-            divider = {
-                Divider(color = Color.Gray.copy(alpha = 0.2f),
-                    thickness = 1.dp)
-            }) { item ->
+        itemsWithDividers(items = shoppingList) { item ->
             ItemView(item, dispatch)
         }
     }

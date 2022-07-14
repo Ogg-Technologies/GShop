@@ -1,16 +1,16 @@
 package com.example.gshop.ui
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.gshop.model.store.State
-import com.example.gshop.model.store.doNavigateBack
-import com.example.gshop.model.store.doScreenChangeDispatch
-import com.example.gshop.model.store.mockState
+import androidx.compose.ui.unit.dp
+import com.example.gshop.model.store.*
 import com.example.gshop.redux.Dispatch
 import com.example.gshop.ui.theme.GShopTheme
 
@@ -19,18 +19,19 @@ fun RecipeScreen(state: State, dispatch: Dispatch) {
     BackHandler {
         dispatch(doScreenChangeDispatch(doNavigateBack()))
     }
+    val recipe = state.selectedRecipe()
     Scaffold(
-        topBar = { RecipeTopBar(dispatch) },
+        topBar = { RecipeTopBar(recipe, dispatch) },
         content = {
-            Text(text = "Recipe details")
+            Text(recipe.contents, modifier = Modifier.padding(16.dp))
         },
     )
 }
 
 @Composable
-fun RecipeTopBar(dispatch: Dispatch) {
+fun RecipeTopBar(recipe: Recipe, dispatch: Dispatch) {
     TopAppBar(
-        title = { Text(text = "Recipe") },
+        title = { Text(recipe.title) },
         backgroundColor = MaterialTheme.colors.primary,
         navigationIcon = { BackButton(dispatch) }
     )

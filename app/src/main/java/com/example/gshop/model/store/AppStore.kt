@@ -19,11 +19,13 @@ data class State(
     val shoppingList: List<Item> = emptyList(),
     val navigationStack: NavigationStack = listOf(Screen.Main),
     val itemCategoryAssociations: Map<String, Category> = getStartingItemCategoryAssociations(),
+    val recipesData: RecipesData = RecipesData.NoFolderSelected,
 )
 
 data class SetState(val state: State) : Action
 
 fun rootReducer(state: State, action: Action): State = when (action) {
+    is SetRecipesData -> state.copy(recipesData = action.recipesData)
     is SetState -> action.state
     is NavAction -> state.copy(navigationStack = navigationReducer(
         state.navigationStack,

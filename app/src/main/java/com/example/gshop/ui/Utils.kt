@@ -1,8 +1,10 @@
 package com.example.gshop.ui
 
+import android.content.Context
 import android.graphics.Rect
 import android.view.View
 import android.view.ViewTreeObserver
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyItemScope
@@ -21,16 +23,26 @@ import androidx.compose.ui.window.PopupProperties
 import com.example.gshop.model.store.doNavigateBack
 import com.example.gshop.redux.Dispatch
 
+fun Context.toast(message: String) =
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
 fun <I> LazyListScope.itemsWithDividers(
     items: List<I>,
-    divider: @Composable () -> Unit,
+    divider: @Composable () -> Unit = { Divider() },
     itemContent: @Composable LazyItemScope.(item: I) -> Unit,
+) = itemsIndexedWithDividers(items, divider) { _, item ->
+    itemContent(item)
+}
+
+fun <I> LazyListScope.itemsIndexedWithDividers(
+    items: List<I>,
+    divider: @Composable () -> Unit = { Divider() },
+    itemContent: @Composable LazyItemScope.(index: Int, item: I) -> Unit,
 ) {
     items.forEachIndexed { index, item ->
         item {
             if (index != 0) divider()
-            itemContent(item)
+            itemContent(index, item)
         }
     }
 }

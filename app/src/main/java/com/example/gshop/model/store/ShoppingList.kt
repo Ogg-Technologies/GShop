@@ -41,9 +41,9 @@ fun doAddItem(item: Item) = Thunk { _, dispatch ->
 fun doEditItem(id: Identifier): Action = Thunk { state, dispatch ->
     val item = state.shoppingList.first { it.id == id }
     dispatch(ListAction.RemoveItem(id))
+    dispatch(ItemFieldAction.Open)
     dispatch(ItemFieldAction.SetText(item.name))
     dispatch(ItemFieldAction.SetCategory(item.category))
-    dispatch(ItemFieldAction.Open)
 }
 
 fun doStaggeredClearCompleted(timeDelay: Long = 100): Action = AsyncThunk { state, dispatch ->
