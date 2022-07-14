@@ -8,19 +8,21 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gshop.model.store.*
+import com.example.gshop.model.store.State
 import com.example.gshop.redux.Dispatch
 import com.example.gshop.ui.theme.GShopTheme
 
@@ -88,8 +90,8 @@ fun ItemView(item: Item, dispatch: Dispatch) {
         }
         Spacer(modifier = Modifier.weight(1f))
         SimpleStringOverflowMenu {
-            "Delete" does { dispatch(ListAction.RemoveItem(item.id)) }
-            "Edit" does { dispatch(doEditItem(item.id)) }
+            "Delete item" does { dispatch(ListAction.RemoveItem(item.id)) }
+            "Edit item" does { dispatch(doEditItem(item.id)) }
         }
     }
 }
@@ -116,7 +118,7 @@ fun MainTopBar(dispatch: Dispatch) {
                 Icon(Icons.Filled.Delete, contentDescription = "Delete")
             }
             SimpleStringOverflowMenu {
-                "Recipes" does { dispatch(doNavigateTo(Screen.RecipesList)) }
+                "View recipes" does { dispatch(doNavigateTo(Screen.RecipesList)) }
             }
         }
     )
@@ -124,9 +126,16 @@ fun MainTopBar(dispatch: Dispatch) {
 
 @Composable
 fun ItemFieldView(state: State, dispatch: Dispatch) {
+    val text = state.itemField.text
+    var textFieldValueState by remember { mutableStateOf(TextFieldValue(text = text)) }
+    val textFieldValue = textFieldValueState.copy(text = text)
+
     val focusRequester = FocusRequester()
     val view = LocalView.current
-    LaunchedEffect(view) { focusRequester.requestFocus() }
+    LaunchedEffect(view) {
+        focusRequester.requestFocus()
+        textFieldValueState = textFieldValueState.copy(selection = TextRange(text.length))
+    }
     OnKeyboardClose(view) { dispatch(ItemFieldAction.Close) }
 
     Surface(
@@ -135,9 +144,12 @@ fun ItemFieldView(state: State, dispatch: Dispatch) {
     ) {
         Column {
             TextField(
-                value = state.itemField.text,
+                value = textFieldValue,
                 onValueChange = {
-                    dispatch(ItemFieldAction.SetText(it))
+                    textFieldValueState = it
+                    if (text != it.text) {
+                        dispatch(ItemFieldAction.SetText(it.text))
+                    }
                 },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done
