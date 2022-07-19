@@ -31,6 +31,7 @@ sealed interface ListAction : Action {
     data class AddItem(val item: Item) : ListAction
     data class ToggleItem(val id: Identifier) : ListAction
     data class RemoveItem(val id: Identifier) : ListAction
+    data class SetShoppingList(val newShoppingList: List<Item>) : ListAction
 }
 
 fun doAddItemByName(itemName: String) = Thunk { state, dispatch ->
@@ -68,5 +69,6 @@ fun shoppingListReducer(shoppingList: List<Item>, action: Action): List<Item> = 
     is ListAction.AddItem -> (shoppingList + action.item).sortedByCategoryAndName()
     is ListAction.ToggleItem -> shoppingList.toggle(action.id)
     is ListAction.RemoveItem -> shoppingList.filter { it.id != action.id }
+    is ListAction.SetShoppingList -> action.newShoppingList.sortedByCategoryAndName()
     else -> shoppingList
 }

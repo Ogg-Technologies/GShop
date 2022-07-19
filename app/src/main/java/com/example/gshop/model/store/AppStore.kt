@@ -1,5 +1,6 @@
 package com.example.gshop.model.store
 
+import com.example.gshop.model.store.sync.SetShoppingListAtLastSync
 import com.example.gshop.redux.*
 import kotlinx.serialization.Serializable
 
@@ -17,6 +18,7 @@ val appStore = Store(
 data class State(
     val itemField: ItemField = ItemField(),
     val shoppingList: List<Item> = emptyList(),
+    val shoppingListAtLastSync: List<Item> = emptyList(),
     val navigationStack: NavigationStack = listOf(Screen.Main),
     val itemCategoryAssociations: Map<String, Category> = getStartingItemCategoryAssociations(),
     val recipesData: RecipesData = RecipesData.NoFolderSelected,
@@ -27,10 +29,13 @@ data class SetState(val state: State) : Action
 fun rootReducer(state: State, action: Action): State = when (action) {
     is SetRecipesData -> state.copy(recipesData = action.recipesData)
     is SetState -> action.state
-    is NavAction -> state.copy(navigationStack = navigationReducer(
-        state.navigationStack,
-        action
-    ))
+    is SetShoppingListAtLastSync -> state.copy(shoppingListAtLastSync = action.list)
+    is NavAction -> state.copy(
+        navigationStack = navigationReducer(
+            state.navigationStack,
+            action
+        )
+    )
     is ScreenAction -> state.copy(navigationStack = state.navigationStack.editLast {
         screenReducer(it,
             action)
