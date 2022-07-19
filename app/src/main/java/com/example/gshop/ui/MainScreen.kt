@@ -10,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -151,14 +152,14 @@ fun MainTopBar(dispatch: Dispatch) {
         title = { Text("GShop") },
         backgroundColor = MaterialTheme.colors.primary,
         actions = {
-            IconButton(onClick = {
-                dispatch(doStaggeredClearCompleted())
-            }) {
+            IconButton(onClick = { dispatch(doStaggeredClearCompleted()) }) {
                 Icon(Icons.Filled.Delete, contentDescription = "Delete")
+            }
+            IconButton(onClick = { dispatch(syncWithWatch()) }) {
+                Icon(Icons.Filled.Refresh, contentDescription = "Sync")
             }
             SimpleStringOverflowMenu {
                 "View recipes" does { dispatch(doNavigateTo(Screen.RecipesList)) }
-                "Sync with watch" does { dispatch(syncWithWatch()) }
             }
         }
     )
