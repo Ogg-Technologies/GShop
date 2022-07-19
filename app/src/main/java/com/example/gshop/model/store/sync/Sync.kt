@@ -1,21 +1,20 @@
 package com.example.gshop.model.store.sync
 
-import com.example.gshop.App
 import com.example.gshop.model.store.Item
 import com.example.gshop.model.store.ListAction
 import com.example.gshop.model.utilities.GResult
 import com.example.gshop.model.utilities.suspenedGResult
 import com.example.gshop.redux.Action
 import com.example.gshop.redux.AsyncThunk
-import com.example.gshop.ui.toast
+
+data class SetShoppingListAtLastSync(val list: List<Item>) : Action
 
 fun syncWithWatch() = AsyncThunk { state, dispatch ->
     val syncResult = syncShoppingListWithWatch(
         shoppingListAtLastSync = state.shoppingListAtLastSync,
         shoppingList = state.shoppingList,
         onSyncStatusUpdate = { status ->
-            // Use status to show feedback to the user
-            println(status)
+            SyncNotifications.notify(status)
         },
         onMergedListCreated = { mergedList ->
             dispatch(ListAction.SetShoppingList(mergedList))
@@ -23,37 +22,28 @@ fun syncWithWatch() = AsyncThunk { state, dispatch ->
         }
     )
     when (syncResult) {
-        is GResult.Ok -> App.context.toast("Sync successful")
-        is GResult.Err -> App.context.toast(syncResult.error)
+        is GResult.Ok -> SyncNotifications.notify(SyncStatus.SyncComplete)
+        is GResult.Err -> SyncNotifications.notify(SyncStatus.SyncFailed(syncResult.error))
     }
 }
 
-data class SetShoppingListAtLastSync(val list: List<Item>) : Action
-
 const val GARMIN_APP_ID = "1cbcd060-595c-4b40-bbac-b26475f39d5b"
-
-
-sealed interface GarminSyncStatus {
-    object EstablishingConnection : GarminSyncStatus
-    object FetchingWatchList : GarminSyncStatus
-    object SendingList : GarminSyncStatus
-}
 
 suspend fun syncShoppingListWithWatch(
     shoppingListAtLastSync: List<Item>,
     shoppingList: List<Item>,
-    onSyncStatusUpdate: suspend (GarminSyncStatus) -> Unit,
+    onSyncStatusUpdate: suspend (SyncStatus.Intermediate) -> Unit,
     onMergedListCreated: suspend (mergedList: List<Item>) -> Unit,
 ): GResult<List<Item>, String> =
     suspenedGResult {
         val communication = GarminCommunicationManager.getCommunication(
-            onCommunicationSetup = { onSyncStatusUpdate(GarminSyncStatus.EstablishingConnection) },
+            onCommunicationSetup = { onSyncStatusUpdate(SyncStatus.EstablishingConnection) },
         ).bind()
-        onSyncStatusUpdate(GarminSyncStatus.FetchingWatchList)
+        onSyncStatusUpdate(SyncStatus.FetchingWatchList)
         val watchList = communication.getShoppingListFromWatch(5000).bind()
         val mergedList = mergeShoppingLists(shoppingListAtLastSync, watchList, shoppingList)
         onMergedListCreated(mergedList)
-        onSyncStatusUpdate(GarminSyncStatus.SendingList)
+        onSyncStatusUpdate(SyncStatus.SendingList)
         val shoppingListMessage = mergedList.shoppingListToGarminProtocolFormat()
         communication.sendMessageToWatchForStatus(shoppingListMessage, 3000).bind()
         GResult.Ok(mergedList)

@@ -16,10 +16,10 @@ val appStore = Store(
 
 @Serializable
 data class State(
-    val itemField: ItemField = ItemField(),
     val shoppingList: List<Item> = emptyList(),
-    val shoppingListAtLastSync: List<Item> = emptyList(),
+    val itemField: ItemField = ItemField(),
     val navigationStack: NavigationStack = listOf(Screen.Main),
+    val shoppingListAtLastSync: List<Item> = emptyList(),
     val itemCategoryAssociations: Map<String, Category> = getStartingItemCategoryAssociations(),
     val recipesData: RecipesData = RecipesData.NoFolderSelected,
 )
@@ -37,14 +37,15 @@ fun rootReducer(state: State, action: Action): State = when (action) {
         )
     )
     is ScreenAction -> state.copy(navigationStack = state.navigationStack.editLast {
-        screenReducer(it,
-            action)
+        screenReducer(it, action)
     })
     is ItemFieldAction -> state.copy(itemField = itemFieldReducer(state, action))
     is ListAction -> state.copy(shoppingList = shoppingListReducer(state.shoppingList, action))
-    is AddItemCategoryAssociation -> state.copy(itemCategoryAssociations = itemCategoryAssociationsReducer(
-        state.itemCategoryAssociations,
-        action
-    ))
+    is AddItemCategoryAssociation -> state.copy(
+        itemCategoryAssociations = itemCategoryAssociationsReducer(
+            state.itemCategoryAssociations,
+            action
+        )
+    )
     else -> state
 }

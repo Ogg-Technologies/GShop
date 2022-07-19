@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gshop.model.store.*
 import com.example.gshop.model.store.State
+import com.example.gshop.model.store.sync.SyncNotifications
 import com.example.gshop.model.store.sync.syncWithWatch
 import com.example.gshop.redux.Dispatch
 import com.example.gshop.ui.theme.GShopTheme
@@ -45,6 +46,9 @@ fun MainScreen(state: State, dispatch: Dispatch) {
                 ItemFieldView(state, dispatch)
             }
         },
+        snackbarHost = {
+            SnackbarHost(SyncNotifications.snackbarHostState)
+        }
     )
 }
 
