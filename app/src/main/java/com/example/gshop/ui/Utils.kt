@@ -89,7 +89,7 @@ fun SimpleStringOverflowMenu(
 }
 
 @Composable
-fun SimpleTextSpinner(
+fun SimpleStringSpinner(
     items: List<String>,
     selectedItem: String,
     onSelectItem: (String) -> Unit,

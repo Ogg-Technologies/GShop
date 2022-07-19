@@ -46,7 +46,7 @@ fun MainScreen(state: State, dispatch: Dispatch) {
         },
         bottomBar = {
             if (state.itemField.isOpened) {
-                ItemFieldView(state, dispatch)
+                ItemCreationView(state, dispatch)
             }
         },
         snackbarHost = {
@@ -165,47 +165,17 @@ fun MainTopBar(dispatch: Dispatch) {
 }
 
 @Composable
-fun ItemFieldView(state: State, dispatch: Dispatch) {
-    val text = state.itemField.text
-    var textFieldValueState by remember { mutableStateOf(TextFieldValue(text = text)) }
-    val textFieldValue = textFieldValueState.copy(text = text)
-
-    val focusRequester = FocusRequester()
-    val view = LocalView.current
-    LaunchedEffect(view) {
-        focusRequester.requestFocus()
-        textFieldValueState = textFieldValueState.copy(selection = TextRange(text.length))
-    }
-    OnKeyboardClose(view) { dispatch(ItemFieldAction.Close) }
-
+fun ItemCreationView(state: State, dispatch: Dispatch) {
     Surface(
         color = MaterialTheme.colors.background,
         modifier = Modifier.fillMaxWidth(),
     ) {
         Column {
-            TextField(
-                value = textFieldValue,
-                onValueChange = {
-                    textFieldValueState = it
-                    if (text != it.text) {
-                        dispatch(ItemFieldAction.SetText(it.text))
-                    }
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = { dispatch(doSubmitItemField()) }
-                ),
-                placeholder = { Text("Add a todo...") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester)
-            )
+            ItemCreationTextField(state, dispatch)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                SimpleTextSpinner(
+                SimpleStringSpinner(
                     items = allCategories,
                     selectedItem = state.itemField.category,
                     onSelectItem = { dispatch(ItemFieldAction.SetCategory(it)) },
@@ -221,8 +191,42 @@ fun ItemFieldView(state: State, dispatch: Dispatch) {
                             .size(30.dp)
                     )
                 }
-
             }
         }
     }
+}
+
+@Composable
+fun ItemCreationTextField(state: State, dispatch: Dispatch) {
+    val text = state.itemField.text
+    var textFieldValueState by remember { mutableStateOf(TextFieldValue(text = text)) }
+    val textFieldValue = textFieldValueState.copy(text = text)
+
+    val focusRequester = FocusRequester()
+    val view = LocalView.current
+    LaunchedEffect(view) {
+        focusRequester.requestFocus()
+        textFieldValueState = textFieldValueState.copy(selection = TextRange(text.length))
+    }
+    OnKeyboardClose(view) { dispatch(ItemFieldAction.Close) }
+
+    TextField(
+        value = textFieldValue,
+        onValueChange = {
+            textFieldValueState = it
+            if (text != it.text) {
+                dispatch(ItemFieldAction.SetText(it.text))
+            }
+        },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Done
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = { dispatch(doSubmitItemField()) }
+        ),
+        placeholder = { Text("Add a todo...") },
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester)
+    )
 }
