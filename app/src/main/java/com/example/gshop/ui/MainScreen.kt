@@ -1,7 +1,9 @@
 package com.example.gshop.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -19,6 +21,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,9 +50,43 @@ fun MainScreen(state: State, dispatch: Dispatch) {
             }
         },
         snackbarHost = {
-            SnackbarHost(SyncNotifications.snackbarHostState)
+            SnackbarHost(SyncNotifications.snackbarHostState) { data ->
+                SyncStatusSnackbar(message = data.message)
+            }
         }
     )
+}
+
+@Composable
+fun SyncStatusSnackbar(message: String) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        elevation = 8.dp,
+        border = BorderStroke(1.dp, MaterialTheme.colors.primary),
+        modifier = Modifier
+            .padding(16.dp)
+            .wrapContentHeight()
+            .fillMaxWidth()
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Text(
+                text = message,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .padding(16.dp)
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SyncStatusSnackbarPreview() {
+    GShopTheme {
+        Surface(Modifier.fillMaxSize()) {
+            SyncStatusSnackbar("Sync in progress...")
+        }
+    }
 }
 
 @Composable
