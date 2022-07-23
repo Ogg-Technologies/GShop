@@ -1,4 +1,4 @@
-package com.example.gshop.model.utilities
+package com.example.gshop.model.utilities.ai
 
 /**
  * @param I: Type of items

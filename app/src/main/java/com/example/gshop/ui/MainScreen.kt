@@ -32,6 +32,10 @@ import com.example.gshop.model.store.sync.SyncNotifications
 import com.example.gshop.model.store.sync.syncWithWatch
 import com.example.gshop.redux.Dispatch
 import com.example.gshop.ui.theme.GShopTheme
+import com.example.gshop.ui.utilities.OnKeyboardClose
+import com.example.gshop.ui.utilities.SimpleStringOverflowMenu
+import com.example.gshop.ui.utilities.SimpleStringSpinner
+import com.example.gshop.ui.utilities.itemsWithDividers
 
 @Composable
 fun MainScreen(state: State, dispatch: Dispatch) {

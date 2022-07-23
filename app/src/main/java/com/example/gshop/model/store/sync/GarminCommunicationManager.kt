@@ -1,16 +1,16 @@
 package com.example.gshop.model.store.sync
 
 import com.example.gshop.App
-import com.example.gshop.model.utilities.GResult
-import com.example.gshop.model.utilities.suspenedGResult
+import com.example.gshop.model.utilities.monads.GResult
+import com.example.gshop.model.utilities.monads.suspendedGResult
 import com.garmin.android.connectiq.ConnectIQ
 
 object GarminCommunicationManager {
     private var cachedCommunication: GarminCommunication? = null
 
     suspend fun getCommunication(onCommunicationSetup: suspend () -> Unit): GResult<GarminCommunication, String> =
-        suspenedGResult {
-            return@suspenedGResult GResult.Ok(cachedCommunication ?: run {
+        suspendedGResult {
+            return@suspendedGResult GResult.Ok(cachedCommunication ?: run {
                 onCommunicationSetup()
                 val com = createCommunication().bind()
                 cachedCommunication = com

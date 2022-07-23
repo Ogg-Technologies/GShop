@@ -1,7 +1,7 @@
 package com.example.gshop.model.store
 
-import com.example.gshop.model.utilities.calculateDiceCoefficient
-import com.example.gshop.model.utilities.classifyWithKNN
+import com.example.gshop.model.utilities.ai.calculateDiceCoefficient
+import com.example.gshop.model.utilities.ai.classifyWithKNN
 import com.example.gshop.redux.Action
 
 data class AddItemCategoryAssociation(val itemName: String, val category: Category) : Action

@@ -2,8 +2,8 @@ package com.example.gshop.model.store.sync
 
 import com.example.gshop.model.store.Item
 import com.example.gshop.model.store.ListAction
-import com.example.gshop.model.utilities.GResult
-import com.example.gshop.model.utilities.suspenedGResult
+import com.example.gshop.model.utilities.monads.GResult
+import com.example.gshop.model.utilities.monads.suspendedGResult
 import com.example.gshop.redux.Action
 import com.example.gshop.redux.AsyncThunk
 
@@ -35,7 +35,7 @@ suspend fun syncShoppingListWithWatch(
     onSyncStatusUpdate: suspend (SyncStatus.Intermediate) -> Unit,
     onMergedListCreated: suspend (mergedList: List<Item>) -> Unit,
 ): GResult<List<Item>, String> =
-    suspenedGResult {
+    suspendedGResult {
         val communication = GarminCommunicationManager.getCommunication(
             onCommunicationSetup = { onSyncStatusUpdate(SyncStatus.EstablishingConnection) },
         ).bind()
@@ -52,7 +52,7 @@ suspend fun syncShoppingListWithWatch(
 private const val GARMIN_SYNC_PROMPT_STRING = "sync"
 
 private suspend fun GarminCommunication.getShoppingListFromWatch(timeoutMillis: Long? = null): GResult<List<Item>, String> =
-    suspenedGResult {
+    suspendedGResult {
         val responseAny = getGarminResponseFromPrompt(
             GARMIN_SYNC_PROMPT_STRING,
             timeoutMillis

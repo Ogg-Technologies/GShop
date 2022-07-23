@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gshop.model.store.*
 import com.example.gshop.redux.Dispatch
+import com.example.gshop.ui.utilities.BackButton
+import com.example.gshop.ui.utilities.itemsIndexedWithDividers
 
 @Composable
 fun IngredientsSelectionScreen(

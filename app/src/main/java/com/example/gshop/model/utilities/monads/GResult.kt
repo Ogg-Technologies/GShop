@@ -1,4 +1,4 @@
-package com.example.gshop.model.utilities
+package com.example.gshop.model.utilities.monads
 
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
@@ -57,18 +57,17 @@ fun <T, E> gresult(block: GResultScope.() -> GResult<T, E>): GResult<T, E> = try
     GResultScope().block()
 } catch (e: GResultShortCircuit) {
     // e.error has to be Any because kotlin does not allow generics in Throwable
-    @Suppress("UNCHECKED_CAST")
-    GResult.Err(e.error as E)
+    @Suppress("UNCHECKED_CAST") GResult.Err(e.error as E)
 }
 
 /**
  * Creates a suspended do-notation scope for a [GResult]. It works like [gresult] but it allows
  * [block] to be a suspended function.
  */
-suspend fun <T, E> suspenedGResult(block: suspend GResultScope.() -> GResult<T, E>): GResult<T, E> = try {
-    GResultScope().block()
-} catch (e: GResultShortCircuit) {
-    // e.error has to be Any because kotlin does not allow generics in Throwable
-    @Suppress("UNCHECKED_CAST")
-    GResult.Err(e.error as E)
-}
+suspend fun <T, E> suspendedGResult(block: suspend GResultScope.() -> GResult<T, E>): GResult<T, E> =
+    try {
+        GResultScope().block()
+    } catch (e: GResultShortCircuit) {
+        // e.error has to be Any because kotlin does not allow generics in Throwable
+        @Suppress("UNCHECKED_CAST") GResult.Err(e.error as E)
+    }

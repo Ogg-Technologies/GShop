@@ -1,4 +1,4 @@
-package com.example.gshop.ui
+package com.example.gshop.ui.utilities
 
 import android.content.Context
 import android.graphics.Rect

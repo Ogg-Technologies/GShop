@@ -1,4 +1,4 @@
-package com.example.gshop.model.utilities
+package com.example.gshop.model.utilities.ai
 
 /**
  * Calculates a number between 0 and 1 which represents how similar the two strings are.

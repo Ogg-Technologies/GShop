@@ -2,6 +2,8 @@ package com.example.gshop.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -10,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.gshop.model.store.*
 import com.example.gshop.redux.Dispatch
+import com.example.gshop.ui.utilities.BackButton
+import com.example.gshop.ui.utilities.MarkdownView
 
 @Composable
 fun RecipeScreen(screen: Screen.Recipe, state: State, dispatch: Dispatch) {
@@ -20,7 +24,12 @@ fun RecipeScreen(screen: Screen.Recipe, state: State, dispatch: Dispatch) {
     Scaffold(
         topBar = { RecipeTopBar(recipe, dispatch) },
         content = {
-            Text(recipe.contents, modifier = Modifier.padding(16.dp))
+            MarkdownView(
+                recipe.contents,
+                Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(bottom = 64.dp)
+            )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {

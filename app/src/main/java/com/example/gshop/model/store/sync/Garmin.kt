@@ -1,9 +1,9 @@
 package com.example.gshop.model.store.sync
 
 import android.content.Context
-import com.example.gshop.model.utilities.GResult
-import com.example.gshop.model.utilities.flatMap
-import com.example.gshop.model.utilities.suspenedGResult
+import com.example.gshop.model.utilities.monads.GResult
+import com.example.gshop.model.utilities.monads.flatMap
+import com.example.gshop.model.utilities.monads.suspendedGResult
 import com.example.gshop.model.utilities.withTimeoutOrDefault
 import com.garmin.android.connectiq.ConnectIQ
 import com.garmin.android.connectiq.IQApp
@@ -38,7 +38,7 @@ data class GarminCommunication(val connectIQ: ConnectIQ, val iqDevice: IQDevice,
 suspend fun ConnectIQ.setupCommunication(
     context: Context, garminAppId: String, timeoutMillis: Long? = null
 ): GResult<GarminCommunication, String> =
-    suspenedGResult<GarminCommunication, String> {
+    suspendedGResult<GarminCommunication, String> {
         val device = connectToDevice(context, timeoutMillis).bind()
         val app = connectToApp(device, garminAppId, timeoutMillis).bind()
         GResult.Ok(GarminCommunication(this@setupCommunication, device, app))
