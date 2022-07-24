@@ -2,6 +2,7 @@
 <resources>
 
     <style name="Theme.GShop" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="android:statusBarColor">#FF512DA8</item>
     </style>
 </resources>
